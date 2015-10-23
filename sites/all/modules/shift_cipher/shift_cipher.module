@@ -2,13 +2,20 @@
   function shift_cipher_menu() {
     $items = array();
     $items['shift_cipher'] = array(
-       'title' => 'Shift Cipher',
-       'page callback' => 'drupal_get_form',
-       'page arguments' => array('shift_cipher_form'),
-       'access callback' => TRUE,
-       'type' => MENU_NORMAL_ITEM,
-   );
-   return $items;
+      'title' => 'Shift Cipher',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('shift_cipher_form'),
+      'access callback' => TRUE,
+      'type' => MENU_NORMAL_ITEM,
+    );
+
+    $items['shift_cipher_success_page'] = array (
+      'title' => 'Results',
+      'page callback' => 'shift_cipher_success',
+      'access callback' => TRUE,
+      'type' => MENU_CALLBACK,
+    );
+    return $items;
   }
 
   function shift_cipher_form() {
@@ -22,7 +29,7 @@
     $form['shift_direction'] = array(
         '#title' => 'Shift Direction',
         '#type' => 'textfield',
-        '#description' => t("Direction shift, left or right?"),
+        '#description' => t("Direction shift: left or right?"),
         '#element_validate' => array('element_validate_alpha_range'),
         '#required' => TRUE,
     );
@@ -46,19 +53,50 @@
   }
 
   function element_validate_alpha_range($element) {
-      if (!in_array($element['#value'], array('left', 'Left', 'LEFT', 'right', 'Right', 'RIGHT'))) {
+      if (!in_array($element['#value'], array('left', 'right' ))) {
           form_error($element, t('Direction must be left or right'));
       }
   }
 
   function shift_cipher_form_validate($form, &$form_state) {
-      $pattern = '/[^A-Za-z0-9^\'^\:^\,^\-^\!^\(^\)^\.^\?^\"^\;\s]/';
-      $cipher_check = $form_state['values']['cipher_phrase'];
-      drupal_set_message(sprintf('<pre>%s</pre>', print_r($pattern, TRUE)));
-      if (preg_match_all($pattern, $cipher_check)) {
-          form_set_error('cipher_phrase', 'Phrase is incompatible with the cipher.');
-      }
+    $pattern = '/[^A-Za-z0-9^\'^\:^\,^\-^\!^\(^\)^\.^\?^\"^\;\s]/';
+    $cipher_check = $form_state['values']['cipher_phrase'];
+    if (preg_match_all($pattern, $cipher_check)) {
+        form_set_error('cipher_phrase', 'Phrase is incompatible with the cipher.');
+    }
   }
+
+  function shift_cipher_form_submit($form, &$form_state) {
+    $alphabet = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z');
+    $shift = $form_state['values']['shift_value'];
+    $direction = $form_state['values']['shift_direction'];
+    $phrase = $form_state['values']['cipher_phrase'];
+    $lowercase = strtolower($phrase);
+    $split = str_split($lowercase);
+    $output = '';
+    if ($shift === 'left') {
+        $direction_flow = -1;
+    } else {
+        $direction_flow = 1;
+    } // end of if
+    foreach ($split as $char) {
+        if (in_array($char, $alphabet)) {
+            $position = array_search($char, $alphabet);
+            $new_position = ($shift * $direction_flow) + $position;
+            if ($new_position < 0) {
+                $new_position += 26;
+            } elseif ($new_position > 25) {
+                $new_position -= 26;
+            } //end of if
+            $output .= $alphabet[$new_position];
+        } else {
+            $output .= $char;
+        } //end of if
+    } //end of foreach
+    $_SESSION['shift_cipher_output'] = $output;
+    $form_state['redirect'] = 'shift_cipher_success_page';
+  }
+
 
   function shift_cipher_success() {
     return '<h2>' . $_SESSION['shift_cipher_output'] . '</h2>';
