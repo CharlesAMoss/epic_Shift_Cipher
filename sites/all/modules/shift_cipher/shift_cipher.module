@@ -12,31 +12,31 @@
   }
 
   function shift_cipher_form() {
-      $form['shift_value'] = array(
-          '#title' => 'Shift Value',
-          '#type' => 'textfield',
-          '#description' => t("The number of positions to shift?"),
-          '#element_validate' => array('element_validate_integer_positive', 'element_validate_range'),
-          '#required' => TRUE,
-      );
-      $form['shift_direction'] = array(
-          '#title' => 'Shift Direction',
-          '#type' => 'textfield',
-          '#description' => t("Direction shift, left or right?"),
-          '#element_validate' => array('element_validate_alpha_range'),
-          '#required' => TRUE,
-      );
-      $form['cipher_phrase'] = array(
-          '#title' => 'Phrase to Cipher',
-          '#type' => 'textfield',
-          '#description' => t("Phrase to cipher?"),
-          '#required' => TRUE,
-      );
-      $form['submit'] = array(
-          '#type' => 'submit',
-          '#value' => 'Create Cipher',
-      );
-      return $form;
+    $form['shift_value'] = array(
+        '#title' => 'Shift Value',
+        '#type' => 'textfield',
+        '#description' => t("The number of positions to shift?"),
+        '#element_validate' => array('element_validate_integer_positive', 'element_validate_range'),
+        '#required' => TRUE,
+    );
+    $form['shift_direction'] = array(
+        '#title' => 'Shift Direction',
+        '#type' => 'textfield',
+        '#description' => t("Direction shift, left or right?"),
+        '#element_validate' => array('element_validate_alpha_range'),
+        '#required' => TRUE,
+    );
+    $form['cipher_phrase'] = array(
+        '#title' => 'Phrase to Cipher',
+        '#type' => 'textfield',
+        '#description' => t("Phrase to cipher?"),
+        '#required' => TRUE,
+    );
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Create Cipher',
+    );
+    return $form;
   }
 
   function element_validate_range($element) {
@@ -58,4 +58,8 @@
       if (preg_match_all($pattern, $cipher_check)) {
           form_set_error('cipher_phrase', 'Phrase is incompatible with the cipher.');
       }
+  }
+
+  function shift_cipher_success() {
+    return '<h2>' . $_SESSION['shift_cipher_output'] . '</h2>';
   }
