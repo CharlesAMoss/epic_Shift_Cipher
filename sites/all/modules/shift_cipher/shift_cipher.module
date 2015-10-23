@@ -8,4 +8,33 @@
        'access callback' => TRUE,
        'type' => MENU_NORMAL_ITEM,
    );
+   return $items;
+  }
+
+  function shift_cipher_form() {
+      $form['shift_value'] = array(
+          '#title' => 'Shift Value',
+          '#type' => 'textfield',
+          '#description' => t("The number of positions to shift?"),
+          '#element_validate' => array('element_validate_integer_positive', 'element_validate_range'),
+          '#required' => TRUE,
+      );
+      $form['shift_direction'] = array(
+          '#title' => 'Shift Direction',
+          '#type' => 'textfield',
+          '#description' => t("Direction shift, left or right?"),
+          '#element_validate' => array('element_validate_alpha_range'),
+          '#required' => TRUE,
+      );
+      $form['cipher_phrase'] = array(
+          '#title' => 'Phrase to Cipher',
+          '#type' => 'textfield',
+          '#description' => t("Phrase to cipher?"),
+          '#required' => TRUE,
+      );
+      $form['submit'] = array(
+          '#type' => 'submit',
+          '#value' => 'Create Cipher',
+      );
+      return $form;
   }
