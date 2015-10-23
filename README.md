@@ -2,7 +2,7 @@
 ## _10/23/2015_
 ### By [Charles Moss](https://twitter.com/CharlesMoss)
 ## Description
-_._
+_Substitution cipher in which each letter in the plaintext is replaced by a letter the number of positions down the alphabet._
 
 ## Setup
 

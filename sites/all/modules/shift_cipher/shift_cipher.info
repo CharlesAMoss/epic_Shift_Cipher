@@ -1,0 +1,5 @@
+name = Shift Cipher
+description = Displays output of the Ping Pong Problem using a form for input.
+package = Examples
+core = 7.x
+files[] = shift_cipher.module
