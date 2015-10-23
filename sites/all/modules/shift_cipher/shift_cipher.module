@@ -38,3 +38,24 @@
       );
       return $form;
   }
+
+  function element_validate_range($element) {
+    if ($element['#value'] < 1 || $element['#value'] > 25) {
+        form_error($element, t('Value must be postive and less than or equal to 25'));
+    }
+  }
+
+  function element_validate_alpha_range($element) {
+      if (!in_array($element['#value'], array('left', 'Left', 'LEFT', 'right', 'Right', 'RIGHT'))) {
+          form_error($element, t('Direction must be left or right'));
+      }
+  }
+
+  function shift_cipher_form_validate($form, &$form_state) {
+      $pattern = '/[^A-Za-z0-9^\'^\:^\,^\-^\!^\(^\)^\.^\?^\"^\;\s]/';
+      $cipher_check = $form_state['values']['cipher_phrase'];
+      drupal_set_message(sprintf('<pre>%s</pre>', print_r($pattern, TRUE)));
+      if (preg_match_all($pattern, $cipher_check)) {
+          form_set_error('cipher_phrase', 'Phrase is incompatible with the cipher.');
+      }
+  }
