@@ -12,7 +12,9 @@ spyslikeus
 ##### If you paste the below code into phpmyadmin's console the above "cipher_admin" user will be created/imported for you.
 
 ```
+GRANT USAGE ON *.* TO 'cipher_admin'@'localhost' IDENTIFIED BY PASSWORD '*8FC612A187C4A188F97A2B5B7C162E45617EAE7B';
 
+GRANT ALL PRIVILEGES ON `cipher`.* TO 'cipher_admin'@'localhost';
 ```
 
 admin
@@ -20,7 +22,7 @@ spyslikeus
 
 
 ## Technologies Used
-_Drupal_
+_Drupal 7.41_
 
 ### Legal
 Copyright (c) 2015 Charles A Moss
