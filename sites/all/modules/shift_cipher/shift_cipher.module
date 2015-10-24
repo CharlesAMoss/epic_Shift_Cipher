@@ -58,7 +58,7 @@
   }
 
   function shift_cipher_form_validate($form, &$form_state) {
-    $regex = '/[^A-Za-z0-9^\'^\:^\,^\-^\!^\(^\)^\.^\?^\"^\;\s]/';
+    $regex = '/[^A-Za-z^\'^\:^\,^\-^\!^\(^\)^\.^\?^\"^\;\s]/';
     $phase_entered = $form_state['values']['cipher_phrase'];
     if (preg_match_all($regex, $phase_entered)) {
       form_set_error('cipher_phrase', 'Phrase is incompatible with the cipher.');
