@@ -5,11 +5,7 @@
  * A substitution cipher contrib module.
  */
 
- /**
-  * Implements hook_menu().
-  */
-
-function shift_cipher_menu() {
+ function shift_cipher_menu() {
   $items = array();
   $items['shift_cipher'] = array(
     'title' => 'Shift Cipher',
@@ -19,17 +15,13 @@ function shift_cipher_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
   $items['shift_cipher_success_page'] = array (
-    'title' => 'Results',
+    'title' => 'Result:',
     'page callback' => 'shift_cipher_success',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
   return $items;
 }
-
-/**
- * Implements hook_form().
- */
 
 function shift_cipher_form() {
   $form['shift_value'] = array(
@@ -59,8 +51,6 @@ function shift_cipher_form() {
   return $form;
 }
 
-
-
 function element_validate_range($element) {
   if ($element['#value'] < 1 || $element['#value'] > 25) {
     form_error($element, t('Value must be postive and less than or equal to 25'));
@@ -82,7 +72,6 @@ function shift_cipher_form_validate($form, &$form_state) {
 }
 
 function shift_cipher_form_submit($form, &$form_state) {
-
   // creates reference alpahbet
   $alphabet = [];
   foreach (range('a', 'z') as $letter) {
@@ -92,32 +81,50 @@ function shift_cipher_form_submit($form, &$form_state) {
   $shift = $form_state['values']['shift_value'];
   $direction = $form_state['values']['shift_direction'];
   $phrase = $form_state['values']['cipher_phrase'];
+
+  // sets phase to lowwercase
   $lowercase = strtolower($phrase);
+
+  // splits the string into an array of each letter
   $split = str_split($lowercase, 1);
+
+  // creates the final output as an empty string
   $result = '';
+
+  // determines the direction to shift
   if ($direction === 'left') {
     $direction_flow = -1;
   } else {
     $direction_flow = 1;
-  } // end of if
+  }
+
   foreach ($split as $char) {
     if (in_array($char, $alphabet)) {
+      // finds the position of the letter in the alphabet
       $position = array_search($char, $alphabet);
+      // creates a interger reflecting direction, shift, and starting position.
       $new_position = ($shift * $direction_flow) + $position;
+      // finds the new letter position based on the above interger
       if ($new_position < 0) {
         $new_position += 26;
       } elseif ($new_position > 25) {
         $new_position -= 26;
-      } //end of inner if
+      }
+      // pulls the new letter from the alphabet and adds it to the final string
       $result .= $alphabet[$new_position];
     } else {
+      // if char is a punctuation or a space it is added to the final string here
       $result .= $char;
-    } //end of outer if
-  } //end of foreach
+
+    }
+  }
+  // saves the output in a cookie
   $_SESSION['shift_cipher_result'] = $result;
+  // calls the success page from the hook_menu
   $form_state['redirect'] = 'shift_cipher_success_page';
 }
 
+// final output page
 function shift_cipher_success() {
   return '<h2>' . $_SESSION['shift_cipher_result'] . '</h2>';
 }
