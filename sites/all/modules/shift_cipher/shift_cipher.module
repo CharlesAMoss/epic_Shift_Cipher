@@ -93,7 +93,7 @@ function shift_cipher_form_submit($form, &$form_state) {
   $direction = $form_state['values']['shift_direction'];
   $phrase = $form_state['values']['cipher_phrase'];
   $lowercase = strtolower($phrase);
-  $split = str_split($lowercase);
+  $split = str_split($lowercase, 1);
   $result = '';
   if ($direction === 'left') {
     $direction_flow = -1;
@@ -108,11 +108,11 @@ function shift_cipher_form_submit($form, &$form_state) {
         $new_position += 26;
       } elseif ($new_position > 25) {
         $new_position -= 26;
-      } //end of if
+      } //end of inner if
       $result .= $alphabet[$new_position];
     } else {
       $result .= $char;
-    } //end of if
+    } //end of outer if
   } //end of foreach
   $_SESSION['shift_cipher_result'] = $result;
   $form_state['redirect'] = 'shift_cipher_success_page';
