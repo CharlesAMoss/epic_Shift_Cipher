@@ -73,10 +73,8 @@ function shift_cipher_form_validate($form, &$form_state) {
 
 function shift_cipher_form_submit($form, &$form_state) {
   // creates reference alpahbet
-  $alphabet = [];
-  foreach (range('a', 'z') as $letter) {
-    array_push($alphabet, $letter);
-  }
+  $alphabet = range('a', 'z');
+
   // sets variables from form value
   $shift = $form_state['values']['shift_value'];
   $direction = $form_state['values']['shift_direction'];
